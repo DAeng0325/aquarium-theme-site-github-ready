@@ -36,11 +36,11 @@ body {
   text-align: center;
   cursor: pointer;
 }
- .folder img {
+.folder img {
   width: 36px;
   height: 36px;
   object-fit: contain;
-    }
+}
 .taskbar {
   position: fixed;
   bottom: 0;
@@ -80,9 +80,19 @@ body {
   width: 300px;
   z-index: 999;
   resize: both;
-  overflow: auto;
   font-family: 'MS Sans Serif', sans-serif;
   color: black;
+}
+.popup.folder-style {
+  background-color: #fff;
+  border: 2px solid #000;
+  box-shadow: 2px 2px 0 #808080;
+  font-family: Tahoma, sans-serif;
+}
+.popup.program-style {
+  background-color: #ececec;
+  border: 2px solid #c0c0c0;
+  box-shadow: inset -1px -1px 0 #000, inset 1px 1px 0 #fff;
 }
 .popup-header {
   background-color: #000080;
@@ -108,16 +118,15 @@ body {
   font-size: 12px;
 }
 .popup > div:last-child {
-  padding: 8px;
+  padding: 0;
   font-size: 12px;
-  background-color: white;
-  border-top: 2px solid #c0c0c0;
+  background-color: transparent;
+  border: none;
 }
-  @keyframes fadeIn {
+@keyframes fadeIn {
   from { opacity: 0; transform: translate(-50%, -60%); }
   to { opacity: 1; transform: translate(-50%, -50%); }
 }
-
 .typing {
   background: none;
   width: 100%;
@@ -126,16 +135,14 @@ body {
   border-right: 2px solid black;
   animation: typing 3s steps(30, end), blink 0.75s step-end 5;
 }
-
 @keyframes typing {
   from { width: 0; }
   to { width: 100%; }
 }
-
 @keyframes blink {
   50% { border-color: transparent; }
 }
-</style>
+  </style>
 </head>
 <body class="crt-effect">
   <div class="folder" onclick="openPopup('popup1')">
@@ -151,7 +158,7 @@ body {
     <div>???</div>
   </div>
 
-  <div class="popup" id="systemPopup" style="top: 50%; left: 50%; transform: translate(-50%, -50%); display:block; animation: fadeIn 1s ease-out">
+  <div class="popup program-style" id="systemPopup" style="top: 50%; left: 50%; transform: translate(-50%, -50%); display:block; animation: fadeIn 1s ease-out">
     <div class="popup-header" onmousedown="startDrag(event, 'systemPopup')">
       <span>System Settings</span>
       <button onclick="closePopup('systemPopup')">X</button>
@@ -159,7 +166,7 @@ body {
     <div class="typing">이곳은 스스로를 잃은 존재들이 조용히 유영하는 수조입니다.</div>
   </div>
 
-  <div class="popup" id="musicPopup" style="top: 100px; left: 100px; width: 320px; display: none; z-index: 1000;">
+  <div class="popup program-style" id="musicPopup" style="top: 100px; left: 100px; width: 320px; display: none; z-index: 1000;">
     <div class="popup-header" onmousedown="startDrag(event, 'musicPopup')">
       <span>YouTube Music</span>
       <button onclick="closePopup('musicPopup')">X</button>
@@ -177,7 +184,7 @@ body {
     </div>
   </div>
 
-  <div class="popup" id="popup1" style="top: 150px; left: 150px; display:none">
+  <div class="popup folder-style" id="popup1" style="top: 150px; left: 150px; display:none">
     <div class="popup-header" onmousedown="startDrag(event, 'popup1')">
       <span>폴더 1 내용</span>
       <button onclick="closePopup('popup1')">X</button>
@@ -185,7 +192,7 @@ body {
     <div>이건 폴더 1의 창입니다.</div>
   </div>
 
-  <div class="popup" id="popup2" style="top: 200px; left: 200px; display:none">
+  <div class="popup folder-style" id="popup2" style="top: 200px; left: 200px; display:none">
     <div class="popup-header" onmousedown="startDrag(event, 'popup2')">
       <span>폴더 2 내용</span>
       <button onclick="closePopup('popup2')">X</button>
@@ -193,7 +200,7 @@ body {
     <div>이건 폴더 2의 창입니다.</div>
   </div>
 
-  <div class="popup" id="popup3" style="top: 250px; left: 250px; display:none">
+  <div class="popup folder-style" id="popup3" style="top: 250px; left: 250px; display:none">
     <div class="popup-header" onmousedown="startDrag(event, 'popup3')">
       <span>폴더 3 내용</span>
       <button onclick="closePopup('popup3')">X</button>
@@ -202,26 +209,22 @@ body {
   </div>
 
   <div class="taskbar">
-  <div class="start-button" onclick="toggleStartMenu()">시작</div>
-  <div id="startMenu" style="display:none; position:absolute; bottom:40px; left:0; background:#c0c0c0; border:2px solid #808080; width:180px; font-family:'MS Sans Serif'; font-size:12px; z-index:10001;">
-    <div style="padding:4px; cursor:pointer; border-bottom:1px solid #808080;" onclick="adminLogin()">🔐 관리자 로그인</div>
-    <div style="padding:4px; cursor:pointer;" onclick="openPopup('systemPopup')">⚙️ 시스템 설정</div>
-    <div style="padding:4px; cursor:pointer;" onclick="openPopup('musicPopup')">🎵 뮤직 플레이어</div>
-    
+    <div class="start-button" onclick="toggleStartMenu()">
+      <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;"> 시작
+    </div>
+    <div id="startMenu" style="display:none; position:absolute; bottom:40px; left:0; background:#c0c0c0; border:2px solid #808080; width:180px; font-family:'MS Sans Serif'; font-size:12px; z-index:10001; box-shadow: 2px 2px 0 #808080; padding: 4px 0;">
+      <div style="padding:4px; cursor:pointer; border-bottom:1px solid #808080;" onclick="adminLogin()">🔐 관리자 로그인</div>
+      <div style="padding:4px; cursor:pointer;" onclick="openPopup('systemPopup')">⚙️ 시스템 설정</div>
+      <div style="padding:4px; cursor:pointer;" onclick="openPopup('musicPopup')">🎵 뮤직 플레이어</div>
+    </div>
   </div>
-</div>
-<script>
-  function toggleStartMenu() {
-    const menu = document.getElementById('startMenu');
-    menu.style.display = (menu.style.display === 'none') ? 'block' : 'none';
-  }
-</script>
-
-  <audio autoplay loop>
-    <source src="/ambient.mp3" type="audio/mp3">
-  </audio>
 
   <script>
+    function toggleStartMenu() {
+      const menu = document.getElementById('startMenu');
+      menu.style.display = (menu.style.display === 'none') ? 'block' : 'none';
+    }
+
     function promptPassword() {
       const pwd = prompt('비밀번호를 입력하세요');
       if (pwd === '9240420') {
