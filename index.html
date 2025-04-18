@@ -4,83 +4,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aquarium CRT Theme - 복원+확장 최종본</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP&display=swap" rel="stylesheet" />
+  <title>썸네일 이미지 뷰어 통합본</title>
   <style>
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: url('https://i.pinimg.com/originals/7c/51/a2/7c51a2246319c4c2732b2b4b35b8e4c7.gif') center/cover no-repeat fixed;
-      z-index: -1;
-      opacity: 0.4;
-      filter: blur(2px) brightness(0.7);
-    }
     body {
-      font-family: 'Noto Serif JP', sans-serif;
-      background-color: #0d0f12;
-      color: #e0f0ff;
       margin: 0;
-      overflow: hidden;
-      cursor: url('/cursor.png'), auto;
-    }
-    .folder {
-      display: inline-block;
-      margin: 1rem;
-      text-align: center;
-      cursor: pointer;
-    }
-    .folder img {
-      width: 36px;
-      height: 36px;
-      object-fit: contain;
-    }
-    .taskbar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 40px;
-      background-color: #1a1f26;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 0 1rem;
-      z-index: 10000;
-    }
-    .start-button {
-      background-color: #2c2f36;
-      border: 1px solid #555;
+      background: #0d0f12;
       color: #e0f0ff;
-      padding: 0.3rem 0.8rem;
-      cursor: pointer;
-      margin-right: 1rem;
+      font-family: 'Noto Serif JP', sans-serif;
     }
     .popup {
-      overflow: hidden;
       position: absolute;
       background-color: #ececec;
       border: 2px solid #c0c0c0;
-      width: 300px;
-      z-index: 999;
       resize: both;
+      overflow: hidden;
+      width: 360px;
+      z-index: 999;
       font-family: 'MS Sans Serif', sans-serif;
-      color: black;
+    }
+    .popup.program-style {
+      background-color: #ececec;
+      border: 2px solid #c0c0c0;
+      box-shadow: inset -1px -1px 0 #000, inset 1px 1px 0 #fff;
     }
     .popup-header {
       background-color: #000080;
       color: white;
-      padding: 2px 6px;
+      padding: 4px 8px;
       font-weight: bold;
       display: flex;
       justify-content: space-between;
       align-items: center;
       cursor: move;
-      height: 24px;
-      font-size: 12px;
     }
     .popup-header button {
       background-color: #c0c0c0;
@@ -89,203 +44,88 @@
       height: 20px;
       font-weight: bold;
       cursor: pointer;
-      padding: 0;
-      margin: 0;
-      font-size: 12px;
     }
     .popup-body {
-      padding: 2rem 1rem;
-      font-size: 12px;
-      text-align: center;
-    }
-    #startMenu {
-      display: none;
-      position: absolute;
-      bottom: 40px;
-      left: 0;
-      background: #c0c0c0;
-      border: 2px solid #808080;
-      width: 180px;
-      font-family: 'MS Sans Serif';
-      font-size: 12px;
-      z-index: 10001;
-      padding: 4px 0;
-    }
-    #customPrompt input {
-      width: 80%;
-      margin: 10px auto;
-      display: block;
-    }
-    #adminSection {
-      display: none;
-    }
-    body.admin #adminSection {
-      display: block;
-    }
-  
-    .popup.folder-style {
+      padding: 1rem;
+      color: black;
       background-color: #fff;
-      border: 2px solid #000;
-      box-shadow: 2px 2px 0 #808080;
-      font-family: Tahoma, sans-serif;
     }
-    .popup.program-style {
-      background-color: #ececec;
-      border: 2px solid #c0c0c0;
-      box-shadow: inset -1px -1px 0 #000, inset 1px 1px 0 #fff;
-      font-family: 'MS Sans Serif', sans-serif;
+    .thumbnail-bar {
+      margin-top: 1rem;
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
     }
-
+    .thumbnail-bar img {
+      width: 48px;
+      height: 48px;
+      border: 2px solid #aaa;
+      cursor: pointer;
+      object-fit: cover;
+    }
+    .thumbnail-bar img:hover {
+      border-color: #000080;
+    }
+    .viewer-image {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #888;
+      cursor: zoom-in;
+      transition: transform 0.3s ease;
+    }
   </style>
 </head>
 <body>
-  <!-- 폴더 3개 -->
-  <div class="folder" onclick="openPopup('popup1')">
-    <img src="https://win98icons.alexmeub.com/icons/png/folder_open-4.png" />
-    <div>폴더 1</div>
-  </div>
-  <div class="folder" onclick="openPopup('popup2')">
-    <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-3.png" />
-    <div>폴더 2</div>
-  </div>
-  <div class="folder" onclick="openPopup('popup3')">
-    <img src="https://win98icons.alexmeub.com/icons/png/write_wordpad-2.png" />
-    <div>폴더 3</div>
-  </div>
-
-  <!-- 폴더 팝업 3개 -->
-  <div class="popup folder-style" id="popup1" style="top: 100px; left: 100px; display: none;">
-    <div class="popup-header" onmousedown="startDrag(event, 'popup1')">
-      <span>폴더 1</span>
-      <button onclick="closePopup('popup1')">X</button>
-    </div>
-    <div class="popup-body">폴더 1 내용입니다.</div>
-  </div>
-  <div class="popup folder-style" id="popup2" style="top: 150px; left: 150px; display: none;">
-    <div class="popup-header" onmousedown="startDrag(event, 'popup2')">
-      <span>폴더 2</span>
-      <button onclick="closePopup('popup2')">X</button>
-    </div>
-    <div class="popup-body">폴더 2 내용입니다.</div>
-  </div>
-  <div class="popup folder-style" id="popup3" style="top: 200px; left: 200px; display: none;">
-    <div class="popup-header" onmousedown="startDrag(event, 'popup3')">
-      <span>폴더 3</span>
-      <button onclick="closePopup('popup3')">X</button>
-    </div>
-    <div class="popup-body">폴더 3 내용입니다.</div>
-  </div>
-
-  <!-- 프로그램 팝업 3개 -->
-  <div class="popup program-style" id="systemPopup" style="top:50%; left:50%; transform:translate(-50%, -50%); display:block;">
-  <div class="popup-header" onmousedown="startDrag(event, 'systemPopup')">
-    <span>System Settings</span>
-    <button onclick="closePopup('systemPopup')">X</button>
-  </div>
-  <div class="popup-body">설정 내용입니다.</div>
-</div>
-<div class="popup program-style" id="systemPopup" style="top:50%; left:50%; transform:translate(-50%, -50%); display:block;">
-  <div class="popup-header" onmousedown="startDrag(event, 'systemPopup')">
-    <span>2System Settings</span>
-    <button onclick="closePopup('systemPopup')">X</button>
-  </div>
-  <div class="popup-body">2설정 내용입니다.</div>
-</div>
-<div class="popup program-style" id="systemPopup" style="top:50%; left:50%; transform:translate(-50%, -50%); display:block;">
-  <div class="popup-header" onmousedown="startDrag(event, 'systemPopup')">
-    <span>3System Settings</span>
-    <button onclick="closePopup('systemPopup')">X</button>
-  </div>
-  <div class="popup-body">3설정 내용입니다.</div>
-</div>
-
-
-  <!-- 시스템 세팅 팝업 -->
-  <div class="popup program-style" id="systemPopup" style="top: 50%; left: 50%; transform: translate(-50%, -50%); display: block;">
-    <div class="popup-header" onmousedown="startDrag(event, 'systemPopup')">
-      <span>System Settings</span>
-      <button onclick="closePopup('systemPopup')">X</button>
-    </div>
-    <div class="popup-body">이곳은 스스로를 잃은 존재들이 조용히 유영하는 수조입니다.</div>
-  </div>
-
-  <!-- 시작 메뉴 -->
-  <div class="taskbar" oncontextmenu="event.preventDefault(); showContextMenu(event);">
-    <div class="start-button" onclick="toggleStartMenu()">
-      <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" style="width: 16px; height: 16px; margin-right: 4px;">
-      시작
-    </div>
-  </div>
-  <div id="startMenu">
-    <div style="padding:4px; cursor:pointer;" onclick="adminLogin()">🔐 관리자 로그인</div>
-    <div style="padding:4px; cursor:pointer;" onclick="openPopup('systemPopup')">⚙ 시스템 설정</div>
-  </div>
-
-  <!-- 관리자 로그인 팝업 -->
-  <div class="popup program-style" id="customPrompt" style="top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
-    <div class="popup-header" onmousedown="startDrag(event, 'customPrompt')">
-      <span>관리자 로그인</span>
-      <button onclick="closePopup('customPrompt')">X</button>
+  <!-- 이미지 뷰어 썸네일 버전 -->
+  <div class="popup program-style" id="imageGallery" style="top: 180px; left: 200px; display: block;">
+    <div class="popup-header" onmousedown="startDrag(event, 'imageGallery')">
+      <span>썸네일 이미지 뷰어</span>
+      <button onclick="closePopup('imageGallery')">X</button>
     </div>
     <div class="popup-body">
-      <p>비밀번호를 입력하세요</p>
-      <input type="password" id="adminPasswordInput" />
-      <button onclick="submitAdminPassword()">확인</button>
-      <button onclick="closePopup('customPrompt')">취소</button>
-    </div>
-  </div>
-
-  <!-- 관리자 전용 창 -->
-  <div id="adminSection">
-    <div class="popup program-style" id="adminPopup" style="top: 300px; left: 300px; display: none;">
-      <div class="popup-header" onmousedown="startDrag(event, 'adminPopup')">
-        <span>관리자 전용</span>
-        <button onclick="closePopup('adminPopup')">X</button>
+      <img id="mainImage" src="https://placekitten.com/320/200" class="viewer-image"
+           onclick="toggleZoom(this)" ondblclick="viewFullscreen(this)">
+      <div class="thumbnail-bar">
+        <img src="https://placekitten.com/320/200" onclick="changeImage(this.src)">
+        <img src="https://placebear.com/320/200" onclick="changeImage(this.src)">
+        <img src="https://picsum.photos/320/200" onclick="changeImage(this.src)">
+        <img src="https://placekitten.com/300/200" onclick="changeImage(this.src)">
+        <img src="https://placebear.com/300/200" onclick="changeImage(this.src)">
       </div>
-      <div class="popup-body">이 창은 관리자만 볼 수 있어요!</div>
     </div>
-  </div>
-
-  <!-- 우클릭 메뉴 -->
-  <div id="contextMenu" style="display:none; position:absolute; background:#fff; border:1px solid #888; z-index:10001; font-size:12px;">
-    <div style="padding:5px; cursor:pointer;" onclick="closeAllPopups()">🔻 모든 창 닫기</div>
   </div>
 
   <script>
-    function toggleStartMenu() {
-      const menu = document.getElementById('startMenu');
-      menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
-    }
-    function openPopup(id) {
-      document.getElementById(id).style.display = 'block';
-    }
     function closePopup(id) {
       document.getElementById(id).style.display = 'none';
     }
-    function closeAllPopups() {
-      document.querySelectorAll('.popup').forEach(el => el.style.display = 'none');
-      document.getElementById('contextMenu').style.display = 'none';
+
+    function changeImage(src) {
+      const img = document.getElementById('mainImage');
+      img.src = src;
+      img.style.transform = "scale(1)";
+      img.dataset.zoomed = "false";
     }
-    function showContextMenu(e) {
-      const menu = document.getElementById('contextMenu');
-      menu.style.left = e.pageX + 'px';
-      menu.style.top = e.pageY + 'px';
-      menu.style.display = 'block';
-    }
-    function adminLogin() {
-      openPopup('customPrompt');
-    }
-    function submitAdminPassword() {
-      const pwd = document.getElementById('adminPasswordInput').value;
-      if (pwd === 'admin') {
-        alert('관리자 모드가 활성화되었습니다.');
-        closePopup('customPrompt');
-        document.body.classList.add('admin');
-        openPopup('adminPopup');
+
+    function toggleZoom(img) {
+      const zoomed = img.dataset.zoomed === "true";
+      if (!zoomed) {
+        img.style.transform = "scale(1.6)";
+        img.style.cursor = "zoom-out";
+        img.dataset.zoomed = "true";
       } else {
-        alert('비밀번호가 틀렸습니다.');
+        img.style.transform = "scale(1)";
+        img.style.cursor = "zoom-in";
+        img.dataset.zoomed = "false";
       }
     }
+
+    function viewFullscreen(img) {
+      if (img.requestFullscreen) img.requestFullscreen();
+      else if (img.webkitRequestFullscreen) img.webkitRequestFullscreen();
+      else if (img.msRequestFullscreen) img.msRequestFullscreen();
+    }
+
     let dragTarget = null, offsetX = 0, offsetY = 0;
     function startDrag(e, id) {
       dragTarget = document.getElementById(id);
@@ -294,12 +134,14 @@
       document.addEventListener('mousemove', moveDrag);
       document.addEventListener('mouseup', stopDrag);
     }
+
     function moveDrag(e) {
       if (dragTarget) {
         dragTarget.style.left = (e.clientX - offsetX) + 'px';
         dragTarget.style.top = (e.clientY - offsetY) + 'px';
       }
     }
+
     function stopDrag() {
       document.removeEventListener('mousemove', moveDrag);
       document.removeEventListener('mouseup', stopDrag);
