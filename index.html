@@ -14,51 +14,10 @@
       overflow: hidden;
       cursor: url('/public/cursor.png'), auto;
     }
-
-    .desktop {
-      position: absolute;
-      inset: 0;
-      padding: 1rem;
-    }
-
-    .folder {
-      display: inline-block;
-      margin: 1rem;
-      text-align: center;
-      cursor: pointer;
-    }
-
-    .folder img {
-      width: 64px;
-    }
-
-    .popup {
-      position: absolute;
-      background: #1a1f26;
-      border: 1px solid #ffffff33;
-      padding: 1rem;
-      width: 300px;
-      z-index: 999;
-      box-shadow: 0 0 8px #00ffff88;
-      resize: both;
-      overflow: auto;
-    }
-
-    .popup-header {
-      display: flex;
-      justify-content: space-between;
-      background: #0e141c;
-      padding: 0.5rem;
-      cursor: move;
-      font-weight: bold;
-      border-bottom: 1px solid #444;
-    }
-
     .locked {
       filter: grayscale(1);
       opacity: 0.5;
     }
-
     .wavy-bg::before {
       content: '';
       position: fixed;
@@ -71,20 +30,36 @@
       z-index: 0;
       opacity: 0.1;
     }
-
     @keyframes waveMove {
       0% { background-position: 0 0; }
       100% { background-position: 0 10px; }
     }
+    .popup {
+      position: absolute;
+      background: #1a1f26;
+      border: 1px solid #ffffff33;
+      padding: 1rem;
+      width: 300px;
+      z-index: 999;
+      box-shadow: 0 0 8px #00ffff88;
+      resize: both;
+      overflow: auto;
+    }
+    .popup-header {
+      display: flex;
+      justify-content: space-between;
+      background: #0e141c;
+      padding: 0.5rem;
+      cursor: move;
+      font-weight: bold;
+      border-bottom: 1px solid #444;
+    }
   </style>
 </head>
-
 <body class="crt-effect wavy-bg">
-  <div class="desktop">
-    <div class="folder locked" onclick="promptPassword()">
-      <img src="/public/folder-icon.png" />
-      <div>Secret</div>
-    </div>
+  <div class="folder locked" onclick="promptPassword()">
+    <img src="/public/folder-icon.png" />
+    <div>Secret</div>
   </div>
 
   <div class="popup" id="systemPopup" style="top: 300px; left: 300px; display:none">
@@ -112,7 +87,6 @@
     function openPopup(id) {
       document.getElementById(id).style.display = 'block';
     }
-
     function closePopup(id) {
       document.getElementById(id).style.display = 'none';
     }
@@ -126,14 +100,12 @@
       document.addEventListener('mousemove', moveDrag);
       document.addEventListener('mouseup', stopDrag);
     }
-
     function moveDrag(e) {
       if (dragTarget) {
         dragTarget.style.left = (e.clientX - offsetX) + 'px';
         dragTarget.style.top = (e.clientY - offsetY) + 'px';
       }
     }
-
     function stopDrag() {
       document.removeEventListener('mousemove', moveDrag);
       document.removeEventListener('mouseup', stopDrag);
