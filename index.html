@@ -149,6 +149,43 @@ body {
   </style>
 </head>
 <body class="crt-effect">
+  <!-- 폴더 아이콘들 -->
+  <div class="folder" onclick="openPopup('popup1')">
+    <img src="https://win98icons.alexmeub.com/icons/png/folder_open-4.png" />
+    <div>폴더 1</div>
+  </div>
+  <div class="folder" onclick="openPopup('popup2')">
+    <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-3.png" />
+    <div>폴더 2</div>
+  </div>
+  <div class="folder" onclick="openPopup('popup3')">
+    <img src="https://win98icons.alexmeub.com/icons/png/write_wordpad-2.png" />
+    <div>폴더 3</div>
+  </div>
+
+  <!-- 폴더 창들 -->
+  <div class="popup folder-style" id="popup1" style="top: 120px; left: 120px; display: none;">
+    <div class="popup-header" onmousedown="startDrag(event, 'popup1')">
+      <span>폴더 1</span>
+      <button onclick="closePopup('popup1')">X</button>
+    </div>
+    <div>폴더 1의 내용입니다.</div>
+  </div>
+  <div class="popup folder-style" id="popup2" style="top: 160px; left: 160px; display: none;">
+    <div class="popup-header" onmousedown="startDrag(event, 'popup2')">
+      <span>폴더 2</span>
+      <button onclick="closePopup('popup2')">X</button>
+    </div>
+    <div>폴더 2의 내용입니다.</div>
+  </div>
+  <div class="popup folder-style" id="popup3" style="top: 200px; left: 200px; display: none;">
+    <div class="popup-header" onmousedown="startDrag(event, 'popup3')">
+      <span>폴더 3</span>
+      <button onclick="closePopup('popup3')">X</button>
+    </div>
+    <div>폴더 3의 내용입니다.</div>
+  </div>
+
   <!-- 시스템 세팅 팝업창 -->
   <div class="popup program-style" id="systemPopup" style="top: 50%; left: 50%; transform: translate(-50%, -50%); display: block; animation: fadeIn 1s ease-out;">
     <div class="popup-header" onmousedown="startDrag(event, 'systemPopup')">
