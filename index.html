@@ -131,9 +131,11 @@ body {
 }
 .typing {
   background: none;
-  width: 100%;
+  display: inline-block;
+  max-width: 100%;
   overflow: hidden;
-  white-space: nowrap;
+  white-space: pre-wrap;
+  word-break: keep-all;
   border-right: 2px solid black;
   animation: typing 3s steps(30, end), blink 0.75s step-end 5;
 }
