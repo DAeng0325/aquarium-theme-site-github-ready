@@ -37,8 +37,8 @@ body {
   cursor: pointer;
 }
 .folder img {
-  width: 24px;
-  height: 24px;
+  width: 36px;
+  height: 36px;
   object-fit: contain;
 }
 .taskbar {
@@ -125,10 +125,13 @@ body {
   text-align: center;
   overflow: hidden;
 }
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translate(-50%, -60%); }
   to { opacity: 1; transform: translate(-50%, -50%); }
 }
+
+/* ✅ 고친 타이핑 효과 */
 .typing {
   background: none;
   display: inline-block;
@@ -152,7 +155,7 @@ body {
 <body class="crt-effect">
   <!-- 폴더 아이콘들 -->
   <div class="folder" onclick="openPopup('popup1')">
-    <img src="https://win98icons.alexmeub.com/icons/png/msg_warning-0.png" />
+    <img src="https://win98icons.alexmeub.com/icons/png/folder_open-4.png" />
     <div>폴더 1</div>
   </div>
   <div class="folder" onclick="openPopup('popup2')">
@@ -160,7 +163,7 @@ body {
     <div>폴더 2</div>
   </div>
   <div class="folder" onclick="openPopup('popup3')">
-    <img src="https://win98icons.alexmeub.com/icons/png/game_hearts.png" />
+    <img src="https://win98icons.alexmeub.com/icons/png/write_wordpad-2.png" />
     <div>폴더 3</div>
   </div>
 
@@ -247,3 +250,5 @@ body {
       }
     }
   </script>
+</body>
+</html>
