@@ -147,5 +147,63 @@ body {
   </style>
 </head>
 <body class="crt-effect">
-<!-- 나머지 코드는 그대로 유지됩니다 -->
+  <!-- 시스템 세팅 팝업창 -->
+  <div class="popup program-style" id="systemPopup" style="top: 50%; left: 50%; transform: translate(-50%, -50%); display: block; animation: fadeIn 1s ease-out;">
+    <div class="popup-header" onmousedown="startDrag(event, 'systemPopup')">
+      <span>System Settings</span>
+      <button onclick="closePopup('systemPopup')">X</button>
+    </div>
+    <div class="typing">이곳은 스스로를 잃은 존재들이 조용히 유영하는 수조입니다.</div>
+  </div>
 
+  <!-- 작업표시줄 -->
+  <div class="taskbar">
+    <div class="start-button" onclick="toggleStartMenu()">
+      <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;">
+      시작
+    </div>
+    <div id="startMenu" style="display:none; position:absolute; bottom:40px; left:0; background:#c0c0c0; border:2px solid #808080; width:180px; font-family:'MS Sans Serif'; font-size:12px; z-index:10001; box-shadow: 2px 2px 0 #808080; padding: 4px 0;">
+      <div style="padding:4px; cursor:pointer;" onclick="adminLogin()">🔐 관리자 로그인</div>
+      <div style="padding:4px; cursor:pointer;" onclick="openPopup('systemPopup')">⚙️ 시스템 설정</div>
+    </div>
+  </div>
+
+  <script>
+    function toggleStartMenu() {
+      const menu = document.getElementById('startMenu');
+      menu.style.display = (menu.style.display === 'none') ? 'block' : 'none';
+    }
+    function openPopup(id) {
+      document.getElementById(id).style.display = 'block';
+    }
+    function closePopup(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+    let dragTarget = null, offsetX = 0, offsetY = 0;
+    function startDrag(e, id) {
+      dragTarget = document.getElementById(id);
+      offsetX = e.clientX - dragTarget.offsetLeft;
+      offsetY = e.clientY - dragTarget.offsetTop;
+      document.addEventListener('mousemove', moveDrag);
+      document.addEventListener('mouseup', stopDrag);
+    }
+    function moveDrag(e) {
+      if (dragTarget) {
+        dragTarget.style.left = (e.clientX - offsetX) + 'px';
+        dragTarget.style.top = (e.clientY - offsetY) + 'px';
+      }
+    }
+    function stopDrag() {
+      document.removeEventListener('mousemove', moveDrag);
+      document.removeEventListener('mouseup', stopDrag);
+      dragTarget = null;
+    }
+    function adminLogin() {
+      const pwd = prompt('비밀번호를 입력하세요');
+      if (pwd === 'admin') {
+        alert('관리자 모드 활성화!');
+      } else {
+        alert('비밀번호가 틀렸습니다.');
+      }
+    }
+  </script>
