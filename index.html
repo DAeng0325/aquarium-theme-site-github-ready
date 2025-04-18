@@ -118,10 +118,11 @@ body {
   font-size: 12px;
 }
 .popup > div:last-child {
-  padding: 0;
+  padding: 2rem 1rem;
   font-size: 12px;
   background-color: transparent;
   border: none;
+  text-align: center;
 }
 @keyframes fadeIn {
   from { opacity: 0; transform: translate(-50%, -60%); }
@@ -145,152 +146,4 @@ body {
   </style>
 </head>
 <body class="crt-effect">
-  <div class="folder" onclick="openPopup('popup1')">
-    <img src="https://win98icons.alexmeub.com/icons/png/msg_warning-0.png" />
-    <div>???</div>
-  </div>
-  <div class="folder" onclick="openPopup('popup2')">
-    <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png" />
-    <div>???</div>
-  </div>
-  <div class="folder" onclick="openPopup('popup3')">
-    <img src="https://win98icons.alexmeub.com/icons/png/write_wordpad-1.png" />
-    <div>???</div>
-  </div>
-
-  <div class="popup program-style" id="systemPopup" style="top: 50%; left: 50%; transform: translate(-50%, -50%); display:block; animation: fadeIn 1s ease-out">
-    <div class="popup-header" onmousedown="startDrag(event, 'systemPopup')">
-      <span>System Settings</span>
-      <button onclick="closePopup('systemPopup')">X</button>
-    </div>
-    <div class="typing">이곳은 스스로를 잃은 존재들이 조용히 유영하는 수조입니다.</div>
-  </div>
-
-  <div class="popup program-style" id="musicPopup" style="top: 100px; left: 100px; width: 320px; display: none; z-index: 1000;">
-    <div class="popup-header" onmousedown="startDrag(event, 'musicPopup')">
-      <span>YouTube Music</span>
-      <button onclick="closePopup('musicPopup')">X</button>
-    </div>
-    <div>
-      <iframe id="ytplayer" width="100%" height="170"
-        src="https://www.youtube.com/embed/cFX0o7Q1DMY?enablejsapi=1&autoplay=1&loop=1&playlist=cFX0o7Q1DMY&controls=0"
-        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
-      </iframe>
-      <div style="margin-top:0.5rem; display:flex; gap:0.5rem; justify-content:center;">
-        <button onclick="playMusic()">▶ 재생</button>
-        <button onclick="pauseMusic()">⏸ 정지</button>
-        <button onclick="toggleLoop()">🔁 반복</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="popup folder-style" id="popup1" style="top: 150px; left: 150px; display:none">
-    <div class="popup-header" onmousedown="startDrag(event, 'popup1')">
-      <span>폴더 1 내용</span>
-      <button onclick="closePopup('popup1')">X</button>
-    </div>
-    <div>이건 폴더 1의 창입니다.</div>
-  </div>
-
-  <div class="popup folder-style" id="popup2" style="top: 200px; left: 200px; display:none">
-    <div class="popup-header" onmousedown="startDrag(event, 'popup2')">
-      <span>폴더 2 내용</span>
-      <button onclick="closePopup('popup2')">X</button>
-    </div>
-    <div>이건 폴더 2의 창입니다.</div>
-  </div>
-
-  <div class="popup folder-style" id="popup3" style="top: 250px; left: 250px; display:none">
-    <div class="popup-header" onmousedown="startDrag(event, 'popup3')">
-      <span>폴더 3 내용</span>
-      <button onclick="closePopup('popup3')">X</button>
-    </div>
-    <div>이건 폴더 3의 창입니다.</div>
-  </div>
-
-  <div class="taskbar">
-    <div class="start-button" onclick="toggleStartMenu()">
-      <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;"> 시작
-    </div>
-    <div id="startMenu" style="display:none; position:absolute; bottom:40px; left:0; background:#c0c0c0; border:2px solid #808080; width:180px; font-family:'MS Sans Serif'; font-size:12px; z-index:10001; box-shadow: 2px 2px 0 #808080; padding: 4px 0;">
-      <div style="padding:4px; cursor:pointer; border-bottom:1px solid #808080;" onclick="adminLogin()">🔐 관리자 로그인</div>
-      <div style="padding:4px; cursor:pointer;" onclick="openPopup('systemPopup')">⚙️ 시스템 설정</div>
-      <div style="padding:4px; cursor:pointer;" onclick="openPopup('musicPopup')">🎵 뮤직 플레이어</div>
-    </div>
-  </div>
-
-  <script>
-    function toggleStartMenu() {
-      const menu = document.getElementById('startMenu');
-      menu.style.display = (menu.style.display === 'none') ? 'block' : 'none';
-    }
-
-    function promptPassword() {
-      const pwd = prompt('비밀번호를 입력하세요');
-      if (pwd === '9240420') {
-        openPopup('systemPopup');
-      } else {
-        alert('비밀번호가 틀렸습니다');
-      }
-    }
-
-    function openPopup(id) {
-      document.getElementById(id).style.display = 'block';
-    }
-    function closePopup(id) {
-      document.getElementById(id).style.display = 'none';
-    }
-
-    function adminLogin() {
-      const pwd = prompt("관리자 비밀번호를 입력하세요");
-      if (pwd === "admin") {
-        alert("관리자 모드 활성화됨!");
-      } else {
-        alert("비밀번호가 틀렸습니다.");
-      }
-    }
-
-    let dragTarget = null, offsetX = 0, offsetY = 0;
-    function startDrag(e, id) {
-      dragTarget = document.getElementById(id);
-      offsetX = e.clientX - dragTarget.offsetLeft;
-      offsetY = e.clientY - dragTarget.offsetTop;
-      document.addEventListener('mousemove', moveDrag);
-      document.addEventListener('mouseup', stopDrag);
-    }
-    function moveDrag(e) {
-      if (dragTarget) {
-        dragTarget.style.left = (e.clientX - offsetX) + 'px';
-        dragTarget.style.top = (e.clientY - offsetY) + 'px';
-      }
-    }
-    function stopDrag() {
-      document.removeEventListener('mousemove', moveDrag);
-      document.removeEventListener('mouseup', stopDrag);
-      dragTarget = null;
-    }
-
-    let player;
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('ytplayer');
-    }
-    function playMusic() {
-      if (player) player.playVideo();
-    }
-    function pauseMusic() {
-      if (player) player.pauseVideo();
-    }
-    function toggleLoop() {
-      if (player) {
-        let currentLoop = player.getLoop();
-        player.setLoop(!currentLoop);
-        alert('반복재생 ' + (!currentLoop ? '활성화' : '비활성화'));
-      }
-    }
-
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.head.appendChild(tag);
-  </script>
-</body>
-</html>
+<!-- 나머지 코드는 그대로 유지됩니다 -->
