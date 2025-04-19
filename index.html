@@ -327,4 +327,25 @@ function showTab(id) {
   tabs.forEach(tab => tab.style.display = 'none');
   document.getElementById(id).style.display = 'block';
 }
+function openPopup(id) {
+  document.getElementById(id).style.display = 'block';
+}
+
+function closePopup(id) {
+  document.getElementById(id).style.display = 'none';
+}
+
+function toggleStartMenu() {
+  const menu = document.getElementById('startMenu');
+  menu.style.display = (menu.style.display === 'none') ? 'block' : 'none';
+}
+
 </script>
+
+<!-- 작업표시줄 -->
+<div class="taskbar">
+  <div class="start-button" onclick="toggleStartMenu()">
+    <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;">
+    시작
+  </div>
+</div>
