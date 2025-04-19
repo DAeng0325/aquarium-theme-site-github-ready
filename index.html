@@ -78,7 +78,6 @@
   </style>
 </head>
 <body>
-  <!-- 시스템 세팅 팝업 (자동으로 열리지 않음) -->
   <div class="popup" id="systemPopup" style="top: 50%; left: 50%; transform: translate(-50%, -50%); display:none;">
     <div class="popup-header" onmousedown="startDrag(event, 'systemPopup')">
       <span>System</span>
@@ -89,21 +88,19 @@
     </div>
   </div>
 
-  <!-- 폴더 3개 -->
-  <div class="folder" style="top: 100px; left: 100px;" ondblclick="openPopup('popup1')">
-    <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png" width="36" height="36">
-    <div>폴더1</div>
-  </div>
-  <div class="folder" style="top: 100px; left: 180px;" ondblclick="openPopup('popup2')">
-    <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png" width="36" height="36">
-    <div>폴더2</div>
-  </div>
-  <div class="folder" style="top: 100px; left: 260px;" ondblclick="openPopup('popup3')">
-    <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png" width="36" height="36">
-    <div>폴더3</div>
-  </div>
+  <div class="folder" data-id="popup1" style="top: 80px; left: 100px; z-index: 10;">
+  <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png" width="36" height="36">
+  <div>폴더1</div>
+</div>
+  <div class="folder" data-id="popup2" style="top: 80px; left: 180px; z-index: 10;">
+  <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png" width="36" height="36">
+  <div>폴더2</div>
+</div>
+  <div class="folder" data-id="popup3" style="top: 80px; left: 260px; z-index: 10;">
+  <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png" width="36" height="36">
+  <div>폴더3</div>
+</div>
 
-  <!-- 팝업 3개 -->
   <div class="popup" id="popup1" style="top: 160px; left: 100px; display: none;">
     <div class="popup-header" onmousedown="startDrag(event, 'popup1')">
       <span>폴더1</span>
@@ -126,7 +123,6 @@
     <div style="padding: 1rem;">폴더3 내용</div>
   </div>
 
-  <!-- 유튜브 뮤직 플레이어 팝업 -->
   <div class="popup" id="musicPopup" style="top: 100px; left: 500px; display: none; width: 320px;">
     <div class="popup-header" onmousedown="startDrag(event, 'musicPopup')">
       <span>Music Player</span>
@@ -142,7 +138,6 @@
     </div>
   </div>
 
-  <!-- 관리자 로그인 팝업 -->
   <div class="popup" id="adminPopup" style="top: 200px; left: 200px; display: none;">
     <div class="popup-header" onmousedown="startDrag(event, 'adminPopup')">
       <span>Admin Login</span>
@@ -154,145 +149,121 @@
     </div>
   </div>
 
-  <!-- 작업표시줄 -->
   <div class="taskbar">
     <div class="start-button" onclick="openPopup('adminPopup')">시작</div>
   </div>
 
   <script>
-    let dragTarget = null, offsetX = 0, offsetY = 0;
-    function startDrag(e, id) {
-      dragTarget = document.getElementById(id);
-      offsetX = e.clientX - dragTarget.offsetLeft;
-      offsetY = e.clientY - dragTarget.offsetTop;
-      document.addEventListener('mousemove', moveDrag);
-      document.addEventListener('mouseup', stopDrag);
+  let isAdmin = false;
+  let dragTarget = null, offsetX = 0, offsetY = 0;
+  let player;
+
+  function openPopup(id) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'block';
+  }
+  function closePopup(id) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  }
+  function startDrag(e, id) {
+    dragTarget = document.getElementById(id);
+    offsetX = e.clientX - dragTarget.offsetLeft;
+    offsetY = e.clientY - dragTarget.offsetTop;
+    document.addEventListener('mousemove', moveDrag);
+    document.addEventListener('mouseup', stopDrag);
+  }
+  function moveDrag(e) {
+    if (dragTarget) {
+      dragTarget.style.left = (e.clientX - offsetX) + 'px';
+      dragTarget.style.top = (e.clientY - offsetY) + 'px';
     }
-    function moveDrag(e) {
-      if (dragTarget) {
-        dragTarget.style.left = (e.clientX - offsetX) + 'px';
-        dragTarget.style.top = (e.clientY - offsetY) + 'px';
-      }
+  }
+  function stopDrag() {
+    document.removeEventListener('mousemove', moveDrag);
+    document.removeEventListener('mouseup', stopDrag);
+    dragTarget = null;
+  }
+  function handleAdminLogin() {
+    const input = document.getElementById('adminPassword');
+    if (input.value === 'admin') {
+      alert('관리자 로그인 성공!');
+      isAdmin = true;
+      closePopup('adminPopup');
+      enableFolderDragging();
+    } else {
+      alert('비밀번호가 틀렸습니다.');
     }
-    function stopDrag() {
-      document.removeEventListener('mousemove', moveDrag);
-      document.removeEventListener('mouseup', stopDrag);
-      dragTarget = null;
+  }
+  function enableFolderDragging() {
+    const folders = document.querySelectorAll('.folder');
+    folders.forEach(folder => {
+      folder.onmousedown = function (e) {
+        if (!isAdmin) return;
+        e.preventDefault();
+        const rect = folder.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        const offsetY = e.clientY - rect.top;
+
+        function moveAt(pageX, pageY) {
+          const gridX = Math.round((pageX - offsetX) / 20) * 20;
+          const gridY = Math.round((pageY - offsetY) / 20) * 20;
+          folder.style.left = gridX + 'px';
+          folder.style.top = gridY + 'px';
+        }
+
+        function onMouseMove(e) {
+          moveAt(e.pageX, e.pageY);
+        }
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.onmouseup = function () {
+          document.removeEventListener('mousemove', onMouseMove);
+          document.onmouseup = null;
+        };
+      };
+    });
+  }
+  function playMusic() {
+    if (player) player.playVideo();
+  }
+  function pauseMusic() {
+    if (player) player.pauseVideo();
+  }
+  function loopMusic() {
+    if (player) {
+      player.setLoop(true);
+      alert('반복재생 활성화');
     }
-    function openPopup(id) {
-      document.getElementById(id).style.display = 'block';
-    }
-    function closePopup(id) {
-      document.getElementById(id).style.display = 'none';
-    }
-    function handleAdminLogin() {
-      const input = document.getElementById('adminPassword');
-      if (input.value === 'admin') {
-        alert('관리자 로그인 성공!');
-        closePopup('adminPopup');
-      } else {
-        alert('비밀번호가 틀렸습니다.');
-      }
-    }
-    function playMusic() {
-      if (player) player.playVideo();
-    }
-    function pauseMusic() {
-      if (player) player.pauseVideo();
-    }
-    function loopMusic() {
-      if (player) {
-        player.setLoop(true);
-        alert('반복재생 활성화');
-      }
-    }
-    let player;
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('ytplayer');
-    }
+  }
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('ytplayer');
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // 유튜브 API 불러오기
     const tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     document.head.appendChild(tag);
-  let isAdmin = false;
 
-function handleAdminLogin() {
-  const input = document.getElementById('adminPassword');
-  if (input.value === 'admin') {
-    alert('관리자 로그인 성공!');
-    isAdmin = true;
-    closePopup('adminPopup');
-    enableFolderDragging();
-  } else {
-    alert('비밀번호가 틀렸습니다.');
-  }
-}
+    // 폴더 더블클릭 이벤트 연결
+    document.querySelectorAll('.folder').forEach(folder => {
+      const targetId = folder.dataset.id;
+      folder.addEventListener('dblclick', () => {
+        openPopup(targetId);
+      });
+    });
 
-function enableFolderDragging() {
-  const folders = document.querySelectorAll('.folder');
-  folders.forEach(folder => {
-    folder.onmousedown = function (e) {
-      if (!isAdmin) return;
-      e.preventDefault();
-      const rect = folder.getBoundingClientRect();
-      const offsetX = e.clientX - rect.left;
-      const offsetY = e.clientY - rect.top;
-
-      function moveAt(pageX, pageY) {
-        const gridX = Math.round((pageX - offsetX) / 20) * 20;
-        const gridY = Math.round((pageY - offsetY) / 20) * 20;
-        folder.style.left = gridX + 'px';
-        folder.style.top = gridY + 'px';
-      }
-
-      function onMouseMove(e) {
-        moveAt(e.pageX, e.pageY);
-      }
-
-      document.addEventListener('mousemove', onMouseMove);
-      document.onmouseup = function () {
-        document.removeEventListener('mousemove', onMouseMove);
-        document.onmouseup = null;
-      };
-    };
-  });
-}
-<!-- 탭 전환 UI in popup1 -->
-<div class="popup" id="tabPopup" style="top: 250px; left: 250px; display: none; width: 320px;">
-  <div class="popup-header" onmousedown="startDrag(event, 'tabPopup')">
-    <span>탭 프로그램</span>
-    <button onclick="closePopup('tabPopup')">X</button>
-  </div>
-  <div style="padding: 1rem;">
-    <div style="display:flex; gap:10px;">
-      <button onclick="showTabContent('tab1')">탭1</button>
-      <button onclick="showTabContent('tab2')">탭2</button>
-    </div>
-    <div id="tab1" class="tab-content" style="margin-top:10px;">탭1 내용입니다.</div>
-    <div id="tab2" class="tab-content" style="display:none; margin-top:10px;">탭2 내용입니다. 새 창도 열 수 있어요!</div>
-  </div>
-</div>
-
-<script>
-  function showTabContent(id) {
-    const tabs = document.querySelectorAll('.tab-content');
-    tabs.forEach(tab => tab.style.display = 'none');
-    document.getElementById(id).style.display = 'block';
-  }
-</script>
-
-<!-- 폴더 안 폴더 더블클릭 추가 -->
-<script>
-  const folderPopups = ['popup1', 'popup2', 'popup3'];
-  folderPopups.forEach(id => {
-    const folder = document.getElementById(id);
-    folder.addEventListener('dblclick', () => openPopup('tabPopup'));
-  });
-</script>
-
-<script>
-  // 진입 시 systemPopup 자동 열기
-  window.addEventListener('DOMContentLoaded', () => {
+    // 시스템 팝업 초기 표시
     openPopup('systemPopup');
+
+    // 시작 버튼 이벤트 연결
+    const startBtn = document.querySelector('.start-button');
+    if (startBtn) {
+      startBtn.addEventListener('click', () => openPopup('adminPopup'));
+    }
+
+    enableFolderDragging();
   });
 </script>
 </body>
