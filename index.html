@@ -191,7 +191,44 @@ body {
   </div>
 </div>
 
-  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="https://www.youtube.com/iframe_api"><script>
+function openPopup(id) {
+  document.getElementById(id).style.display = 'block';
+}
+
+function closePopup(id) {
+  document.getElementById(id).style.display = 'none';
+}
+
+function toggleStartMenu() {
+  const menu = document.getElementById('startMenu');
+  if (menu) menu.style.display = (menu.style.display === 'none') ? 'block' : 'none';
+}
+
+function showTab(id) {
+  const tabs = document.querySelectorAll('#popup1 .tab-content');
+  tabs.forEach(tab => tab.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+}
+
+function startDrag(e, id) {
+  const target = document.getElementById(id);
+  let offsetX = e.clientX - target.offsetLeft;
+  let offsetY = e.clientY - target.offsetTop;
+  function moveDrag(e) {
+    target.style.left = (e.clientX - offsetX) + 'px';
+    target.style.top = (e.clientY - offsetY) + 'px';
+  }
+  function stopDrag() {
+    document.removeEventListener('mousemove', moveDrag);
+    document.removeEventListener('mouseup', stopDrag);
+  }
+  document.addEventListener('mousemove', moveDrag);
+  document.addEventListener('mouseup', stopDrag);
+}
+</script>
+
+</body>
 
 <!-- 작업표시줄 -->
 <div class="taskbar">
