@@ -128,7 +128,6 @@ body {
   </style>
 </head>
 <body class="crt-effect">
-
 <!-- 관리자 로그인 팝업 -->
 <div class="popup program-style" id="adminPopup" style="top: 200px; left: 200px; display: none;">
   <div class="popup-header" onmousedown="startDrag(event, 'adminPopup')">
@@ -141,7 +140,14 @@ body {
     <button onclick="handleAdminLogin()">로그인</button>
   </div>
 </div>
-
+<!-- 예시 폴더 -->
+<div class="folder" onclick="openPopup('adminPopup')">
+  <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png" alt="folder">
+  <div>관리자</div>
+</div>
+<div class="taskbar">
+  <div class="start-button" onclick="openPopup('adminPopup')">시작</div>
+</div>
 <script>
 function openPopup(id) {
   document.getElementById(id).style.display = 'block';
