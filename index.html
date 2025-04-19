@@ -26,7 +26,6 @@ body {
   overflow: hidden;
   cursor: url('/cursor.png'), auto;
 }
-    
 .locked {
   filter: grayscale(1);
   opacity: 0.5;
@@ -126,103 +125,30 @@ body {
   text-align: center;
   overflow: hidden;
 }
-@keyframes fadeIn {
-  from { opacity: 0; transform: translate(-50%, -60%); }
-  to { opacity: 1; transform: translate(-50%, -50%); }
-}
-.typing {
-  background: none;
-  display: inline-block;
-  max-width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  border-right: 2px solid black;
-  animation: typing 3s steps(30, end), blink 0.75s step-end 5;
-}
-@keyframes typing {
-  from { width: 0; }
-  to { width: 100%; }
-}
-@keyframes blink {
-  50% { border-color: transparent; }
-}
   </style>
 </head>
 <body class="crt-effect">
 
-<!-- 폴더 아이콘들 -->
-<div class="folder" onclick="openPopup('popup1')">
-  <img src="https://win98icons.alexmeub.com/icons/png/folder_open-4.png" />
-  <div>폴더 1</div>
-</div>
-<div class="folder" onclick="openPopup('popup2')">
-  <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-3.png" />
-  <div>폴더 2</div>
-</div>
-<div class="folder" onclick="openPopup('popup3')">
-  <img src="https://win98icons.alexmeub.com/icons/png/write_wordpad-2.png" />
-  <div>폴더 3</div>
-</div>
-
-<!-- 시스템 세팅 팝업 -->
-<div class="popup program-style" id="systemPopup" style="top: 50%; left: 50%; transform: translate(-50%, -50%); display: block; animation: fadeIn 1s ease-out;">
-  <div class="popup-header" onmousedown="startDrag(event, 'systemPopup')">
-    <span>System Settings</span>
-    <button onclick="closePopup('systemPopup')">X</button>
+<!-- 관리자 로그인 팝업 -->
+<div class="popup program-style" id="adminPopup" style="top: 200px; left: 200px; display: none;">
+  <div class="popup-header" onmousedown="startDrag(event, 'adminPopup')">
+    <span>Admin Login</span>
+    <button onclick="closePopup('adminPopup')">X</button>
   </div>
-  <div>이곳은<br>스스로를 잃은 존재들이 조용히 유영하는 수조입니다.</div>
-</div>
-
-<!-- 폴더 1 창 + 탭 시스템 -->
-<div class="popup folder-style" id="popup1" style="top: 120px; left: 120px; display: none;">
-  <div class="popup-header" onmousedown="startDrag(event, 'popup1')">
-    <span>폴더 1</span>
-    <button onclick="closePopup('popup1')">X</button>
-  </div>
-  <div>
-    <div style="display: flex; border-bottom: 1px solid #888; margin-bottom: 0.5rem;">
-      <button onclick="showTab('tab1')">📁 메모장</button>
-      <button onclick="showTab('tab2')">📷 이미지</button>
-      <button onclick="showTab('tab3')">📂 구조</button>
-    </div>
-    <div id="tab1" class="tab-content">이건 메모장 탭입니다.</div>
-    <div id="tab2" class="tab-content" style="display:none;">이건 이미지 탭입니다.</div>
-    <div id="tab3" class="tab-content" style="display:none;">이건 폴더 구조 탭입니다.</div>
+  <div style="text-align:center; padding: 1rem;">
+    <input type="password" id="adminPassword" placeholder="비밀번호 입력" style="width:80%; padding: 0.3rem; margin-bottom: 0.5rem;">
+    <br>
+    <button onclick="handleAdminLogin()">로그인</button>
   </div>
 </div>
 
-  <script src="https://www.youtube.com/iframe_api"></script>
-<script>
-function adminLogin() {
-  const pwd = prompt('비밀번호를 입력하세요');
-  if (pwd === 'admin') {
-    alert('관리자 모드가 활성화되었습니다!');
-    // 추가 동작을 여기에 넣을 수 있어요 (예: 관리자 UI 표시)
-  } else {
-    alert('비밀번호가 틀렸습니다.');
-  }
-}
-</script>
 <script>
 function openPopup(id) {
   document.getElementById(id).style.display = 'block';
 }
-
 function closePopup(id) {
   document.getElementById(id).style.display = 'none';
 }
-
-function toggleStartMenu() {
-  const menu = document.getElementById('startMenu');
-  if (menu) menu.style.display = (menu.style.display === 'none') ? 'block' : 'none';
-}
-
-function showTab(id) {
-  const tabs = document.querySelectorAll('#popup1 .tab-content');
-  tabs.forEach(tab => tab.style.display = 'none');
-  document.getElementById(id).style.display = 'block';
-}
-
 function startDrag(e, id) {
   const target = document.getElementById(id);
   let offsetX = e.clientX - target.offsetLeft;
@@ -238,38 +164,15 @@ function startDrag(e, id) {
   document.addEventListener('mousemove', moveDrag);
   document.addEventListener('mouseup', stopDrag);
 }
+function handleAdminLogin() {
+  const input = document.getElementById('adminPassword');
+  if (input.value === 'admin') {
+    alert('관리자 모드가 활성화되었습니다!');
+    closePopup('adminPopup');
+  } else {
+    alert('비밀번호가 틀렸습니다.');
+  }
+}
 </script>
-
-
-<!-- 작업표시줄 -->
-<div class="taskbar">
-  <div class="start-button" onclick="toggleStartMenu()">
-    <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;">
-    시작
-  </div>
-</div>
-
-<!-- 시작 메뉴 -->
-<div id="startMenu" style="display:none; position:absolute; bottom:40px; left:0; background:#c0c0c0; border:2px solid #808080; width:180px; font-family:'MS Sans Serif'; font-size:12px; z-index:10001; box-shadow: 2px 2px 0 #808080; padding: 4px 0;">
-  <div style="padding:4px; cursor:pointer;" onclick="adminLogin()">🔐 관리자 로그인</div>
-  <div style="padding:4px; cursor:pointer;" onclick="openPopup('systemPopup')">⚙️ 시스템 설정</div>
-</div>
-<!-- 폴더 2 창 -->
-<div class="popup folder-style" id="popup2" style="top: 140px; left: 140px; display: none;">
-  <div class="popup-header" onmousedown="startDrag(event, 'popup2')">
-    <span>폴더 2</span>
-    <button onclick="closePopup('popup2')">X</button>
-  </div>
-  <div>이건 폴더 2의 내용입니다.</div>
-</div>
-
-<!-- 폴더 3 창 -->
-<div class="popup folder-style" id="popup3" style="top: 160px; left: 160px; display: none;">
-  <div class="popup-header" onmousedown="startDrag(event, 'popup3')">
-    <span>폴더 3</span>
-    <button onclick="closePopup('popup3')">X</button>
-  </div>
-  <div>이건 폴더 3의 내용입니다.</div>
-</div>
-
 </body>
+</html>
