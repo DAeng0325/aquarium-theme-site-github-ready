@@ -145,15 +145,18 @@ body {
   <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png" alt="folder">
   <div>관리자</div>
 </div>
+<!-- 작업표시줄 -->
 <div class="taskbar">
   <div class="start-button" onclick="openPopup('adminPopup')">시작</div>
 </div>
 <script>
 function openPopup(id) {
-  document.getElementById(id).style.display = 'block';
+  const el = document.getElementById(id);
+  if (el) el.style.display = 'block';
 }
 function closePopup(id) {
-  document.getElementById(id).style.display = 'none';
+  const el = document.getElementById(id);
+  if (el) el.style.display = 'none';
 }
 function startDrag(e, id) {
   const target = document.getElementById(id);
