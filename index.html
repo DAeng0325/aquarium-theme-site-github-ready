@@ -25,20 +25,6 @@
       color: #e0f0ff;
       overflow: hidden;
     }
-    .typing {
-      font-family: monospace;
-      overflow: hidden;
-      white-space: nowrap;
-      border-right: .15em solid orange;
-      animation: typing 3s steps(40, end), blink .75s step-end infinite;
-    }
-    @keyframes typing {
-      from { width: 0 }
-      to { width: 100% }
-    }
-    @keyframes blink {
-      50% { border-color: transparent }
-    }
     .popup {
       position: absolute;
       background: #1a1f26;
@@ -64,27 +50,117 @@
       padding: 2px 6px;
       cursor: pointer;
     }
+    .folder {
+      position: absolute;
+      width: 64px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .taskbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: #1a1f26;
+      display: flex;
+      align-items: center;
+      padding: 0 1rem;
+      z-index: 9999;
+    }
+    .start-button {
+      background: #333;
+      color: #fff;
+      padding: 4px 12px;
+      border: 1px solid #666;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-  <div class="popup" id="systemPopup" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+  <!-- 시스템 세팅 팝업 (자동으로 열리지 않음) -->
+  <div class="popup" id="systemPopup" style="top: 50%; left: 50%; transform: translate(-50%, -50%); display:none;">
     <div class="popup-header" onmousedown="startDrag(event, 'systemPopup')">
       <span>System</span>
       <button onclick="closePopup('systemPopup')">X</button>
     </div>
     <div style="padding: 1rem">
-      <div class="typing">이곳은 스스로를 잃은 존재들이 조용히 유영하는 수조입니다.</div>
+      <p>이곳은 스스로를 잃은 존재들이 조용히 유영하는 수조입니다.</p>
     </div>
   </div>
+
+  <!-- 폴더 3개 -->
+  <div class="folder" style="top: 100px; left: 100px;" ondblclick="openPopup('popup1')">
+    <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png" width="36" height="36">
+    <div>폴더1</div>
+  </div>
+  <div class="folder" style="top: 100px; left: 180px;" ondblclick="openPopup('popup2')">
+    <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png" width="36" height="36">
+    <div>폴더2</div>
+  </div>
+  <div class="folder" style="top: 100px; left: 260px;" ondblclick="openPopup('popup3')">
+    <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png" width="36" height="36">
+    <div>폴더3</div>
+  </div>
+
+  <!-- 팝업 3개 -->
+  <div class="popup" id="popup1" style="top: 160px; left: 100px; display: none;">
+    <div class="popup-header" onmousedown="startDrag(event, 'popup1')">
+      <span>폴더1</span>
+      <button onclick="closePopup('popup1')">X</button>
+    </div>
+    <div style="padding: 1rem;">폴더1 내용</div>
+  </div>
+  <div class="popup" id="popup2" style="top: 180px; left: 140px; display: none;">
+    <div class="popup-header" onmousedown="startDrag(event, 'popup2')">
+      <span>폴더2</span>
+      <button onclick="closePopup('popup2')">X</button>
+    </div>
+    <div style="padding: 1rem;">폴더2 내용</div>
+  </div>
+  <div class="popup" id="popup3" style="top: 200px; left: 180px; display: none;">
+    <div class="popup-header" onmousedown="startDrag(event, 'popup3')">
+      <span>폴더3</span>
+      <button onclick="closePopup('popup3')">X</button>
+    </div>
+    <div style="padding: 1rem;">폴더3 내용</div>
+  </div>
+
+  <!-- 유튜브 뮤직 플레이어 팝업 -->
+  <div class="popup" id="musicPopup" style="top: 100px; left: 500px; display: none; width: 320px;">
+    <div class="popup-header" onmousedown="startDrag(event, 'musicPopup')">
+      <span>Music Player</span>
+      <button onclick="closePopup('musicPopup')">X</button>
+    </div>
+    <div style="padding: 0.5rem;">
+      <iframe id="ytplayer" width="100%" height="170" src="https://www.youtube.com/embed/cFX0o7Q1DMY?enablejsapi=1&playlist=cFX0o7Q1DMY&controls=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <div style="margin-top:0.5rem; display:flex; gap:0.5rem; justify-content:center;">
+        <button onclick="playMusic()">▶ 재생</button>
+        <button onclick="pauseMusic()">⏸ 정지</button>
+        <button onclick="loopMusic()">🔁 반복</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 관리자 로그인 팝업 -->
+  <div class="popup" id="adminPopup" style="top: 200px; left: 200px; display: none;">
+    <div class="popup-header" onmousedown="startDrag(event, 'adminPopup')">
+      <span>Admin Login</span>
+      <button onclick="closePopup('adminPopup')">X</button>
+    </div>
+    <div style="padding: 1rem;">
+      <input type="password" id="adminPassword" placeholder="비밀번호 입력" style="width: 90%;">
+      <button onclick="handleAdminLogin()">확인</button>
+    </div>
+  </div>
+
+  <!-- 작업표시줄 -->
+  <div class="taskbar">
+    <div class="start-button" onclick="openPopup('adminPopup')">시작</div>
+  </div>
+
   <script>
-    function openPopup(id) {
-      document.getElementById(id).style.display = 'block';
-    }
-    function closePopup(id) {
-      document.getElementById(id).style.display = 'none';
-    }
-    let dragTarget = null;
-    let offsetX = 0, offsetY = 0;
+    let dragTarget = null, offsetX = 0, offsetY = 0;
     function startDrag(e, id) {
       dragTarget = document.getElementById(id);
       offsetX = e.clientX - dragTarget.offsetLeft;
@@ -103,90 +179,115 @@
       document.removeEventListener('mouseup', stopDrag);
       dragTarget = null;
     }
-    window.onload = () => {
-      openPopup('systemPopup');
+    function openPopup(id) {
+      document.getElementById(id).style.display = 'block';
     }
-  </script>
-<!-- 폴더 아이콘 -->
-<div class="folder" onclick="openPopup('popup1')" style="position: absolute; top: 100px; left: 100px; cursor: pointer;">
-  <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png" width="36" height="36">
-  <div style="text-align:center;">폴더1</div>
-</div>
+    function closePopup(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+    function handleAdminLogin() {
+      const input = document.getElementById('adminPassword');
+      if (input.value === 'admin') {
+        alert('관리자 로그인 성공!');
+        closePopup('adminPopup');
+      } else {
+        alert('비밀번호가 틀렸습니다.');
+      }
+    }
+    function playMusic() {
+      if (player) player.playVideo();
+    }
+    function pauseMusic() {
+      if (player) player.pauseVideo();
+    }
+    function loopMusic() {
+      if (player) {
+        player.setLoop(true);
+        alert('반복재생 활성화');
+      }
+    }
+    let player;
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('ytplayer');
+    }
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+  let isAdmin = false;
 
-<!-- 폴더 팝업 -->
-<div class="popup" id="popup1" style="top: 150px; left: 150px; display: none;">
-  <div class="popup-header" onmousedown="startDrag(event, 'popup1')">
-    <span>폴더1</span>
-    <button onclick="closePopup('popup1')">X</button>
+function handleAdminLogin() {
+  const input = document.getElementById('adminPassword');
+  if (input.value === 'admin') {
+    alert('관리자 로그인 성공!');
+    isAdmin = true;
+    closePopup('adminPopup');
+    enableFolderDragging();
+  } else {
+    alert('비밀번호가 틀렸습니다.');
+  }
+}
+
+function enableFolderDragging() {
+  const folders = document.querySelectorAll('.folder');
+  folders.forEach(folder => {
+    folder.onmousedown = function (e) {
+      if (!isAdmin) return;
+      e.preventDefault();
+      const rect = folder.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const offsetY = e.clientY - rect.top;
+
+      function moveAt(pageX, pageY) {
+        const gridX = Math.round((pageX - offsetX) / 20) * 20;
+        const gridY = Math.round((pageY - offsetY) / 20) * 20;
+        folder.style.left = gridX + 'px';
+        folder.style.top = gridY + 'px';
+      }
+
+      function onMouseMove(e) {
+        moveAt(e.pageX, e.pageY);
+      }
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.onmouseup = function () {
+        document.removeEventListener('mousemove', onMouseMove);
+        document.onmouseup = null;
+      };
+    };
+  });
+}
+<!-- 탭 전환 UI in popup1 -->
+<div class="popup" id="tabPopup" style="top: 250px; left: 250px; display: none; width: 320px;">
+  <div class="popup-header" onmousedown="startDrag(event, 'tabPopup')">
+    <span>탭 프로그램</span>
+    <button onclick="closePopup('tabPopup')">X</button>
   </div>
   <div style="padding: 1rem;">
-    <p>여기는 폴더1의 내용입니다.</p>
-  </div>
-</div>
-
-<!-- 유튜브 플레이어 팝업 -->
-<div class="popup" id="musicPopup" style="top: 120px; left: 500px; display: none; width: 320px;">
-  <div class="popup-header" onmousedown="startDrag(event, 'musicPopup')">
-    <span>Music Player</span>
-    <button onclick="closePopup('musicPopup')">X</button>
-  </div>
-  <div style="padding: 0.5rem;">
-    <iframe id="ytplayer" width="100%" height="170" src="https://www.youtube.com/embed/cFX0o7Q1DMY?enablejsapi=1&playlist=cFX0o7Q1DMY&controls=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-    <div style="margin-top:0.5rem; display:flex; gap:0.5rem; justify-content:center;">
-      <button onclick="playMusic()">▶ 재생</button>
-      <button onclick="pauseMusic()">⏸ 정지</button>
+    <div style="display:flex; gap:10px;">
+      <button onclick="showTabContent('tab1')">탭1</button>
+      <button onclick="showTabContent('tab2')">탭2</button>
     </div>
+    <div id="tab1" class="tab-content" style="margin-top:10px;">탭1 내용입니다.</div>
+    <div id="tab2" class="tab-content" style="display:none; margin-top:10px;">탭2 내용입니다. 새 창도 열 수 있어요!</div>
   </div>
 </div>
-
-<!-- 마우스 버블 효과 -->
-<canvas id="bubbleCanvas" style="position:fixed;top:0;left:0;pointer-events:none;z-index:9999;"></canvas>
 
 <script>
-  // 마우스 버블 효과
-  const canvas = document.getElementById('bubbleCanvas');
-  const ctx = canvas.getContext('2d');
-  let bubbles = [];
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+  function showTabContent(id) {
+    const tabs = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => tab.style.display = 'none');
+    document.getElementById(id).style.display = 'block';
   }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
-  window.addEventListener('mousemove', e => {
-    bubbles.push({ x: e.clientX, y: e.clientY, r: 0, a: 1 });
-  });
-  function animateBubbles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    bubbles.forEach((b, i) => {
-      b.r += 1;
-      b.a -= 0.02;
-      if (b.a <= 0) bubbles.splice(i, 1);
-      else {
-        ctx.beginPath();
-        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(255,255,255,${b.a})`;
-        ctx.stroke();
-      }
-    });
-    requestAnimationFrame(animateBubbles);
-  }
-  animateBubbles();
-
-  // YouTube API
-  let player;
-  function onYouTubeIframeAPIReady() {
-    player = new YT.Player('ytplayer');
-  }
-  function playMusic() {
-    if (player) player.playVideo();
-  }
-  function pauseMusic() {
-    if (player) player.pauseVideo();
-  }
-  const tag = document.createElement('script');
-  tag.src = "https://www.youtube.com/iframe_api";
-  document.head.appendChild(tag);
 </script>
+
+<!-- 폴더 안 폴더 더블클릭 추가 -->
+<script>
+  const folderPopups = ['popup1', 'popup2', 'popup3'];
+  folderPopups.forEach(id => {
+    const folder = document.getElementById(id);
+    folder.addEventListener('dblclick', () => openPopup('tabPopup'));
+  });
+</script>
+
 </body>
 </html>
