@@ -193,6 +193,17 @@ body {
 
   <script src="https://www.youtube.com/iframe_api"></script>
 <script>
+function adminLogin() {
+  const pwd = prompt('비밀번호를 입력하세요');
+  if (pwd === 'admin') {
+    alert('관리자 모드가 활성화되었습니다!');
+    // 추가 동작을 여기에 넣을 수 있어요 (예: 관리자 UI 표시)
+  } else {
+    alert('비밀번호가 틀렸습니다.');
+  }
+}
+</script>
+<script>
 function openPopup(id) {
   document.getElementById(id).style.display = 'block';
 }
@@ -240,7 +251,7 @@ function startDrag(e, id) {
 
 <!-- 시작 메뉴 -->
 <div id="startMenu" style="display:none; position:absolute; bottom:40px; left:0; background:#c0c0c0; border:2px solid #808080; width:180px; font-family:'MS Sans Serif'; font-size:12px; z-index:10001; box-shadow: 2px 2px 0 #808080; padding: 4px 0;">
-  <div style="padding:4px; cursor:pointer;" onclick="openPopup('popup1')">📁 폴더 1 열기</div>
+  <div style="padding:4px; cursor:pointer;" onclick="adminLogin()">🔐 관리자 로그인</div>
   <div style="padding:4px; cursor:pointer;" onclick="openPopup('systemPopup')">⚙️ 시스템 설정</div>
 </div>
 <!-- 폴더 2 창 -->
