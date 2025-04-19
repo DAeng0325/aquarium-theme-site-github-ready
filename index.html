@@ -243,4 +243,22 @@ function startDrag(e, id) {
   <div style="padding:4px; cursor:pointer;" onclick="openPopup('popup1')">📁 폴더 1 열기</div>
   <div style="padding:4px; cursor:pointer;" onclick="openPopup('systemPopup')">⚙️ 시스템 설정</div>
 </div>
+<!-- 폴더 2 창 -->
+<div class="popup folder-style" id="popup2" style="top: 140px; left: 140px; display: none;">
+  <div class="popup-header" onmousedown="startDrag(event, 'popup2')">
+    <span>폴더 2</span>
+    <button onclick="closePopup('popup2')">X</button>
+  </div>
+  <div>이건 폴더 2의 내용입니다.</div>
+</div>
+
+<!-- 폴더 3 창 -->
+<div class="popup folder-style" id="popup3" style="top: 160px; left: 160px; display: none;">
+  <div class="popup-header" onmousedown="startDrag(event, 'popup3')">
+    <span>폴더 3</span>
+    <button onclick="closePopup('popup3')">X</button>
+  </div>
+  <div>이건 폴더 3의 내용입니다.</div>
+</div>
+
 </body>
